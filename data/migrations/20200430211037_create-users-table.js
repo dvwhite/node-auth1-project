@@ -7,6 +7,14 @@ exports.up = function(knex) {
       .notNullable()
     tbl.text("password")
       .notNullable()
+    // Optional fields
+    tbl.text("first_name")
+    tbl.text("last_name")
+    tbl.text("email")
+    tbl.text("address")
+    tbl.text("birthday") // Use the ISO8601 string format
+    tbl.text("profile_img_url")
+    tbl.text("bio")
   })
 };
 
