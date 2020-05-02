@@ -16,6 +16,7 @@ router.get("/users", async (req, res) => {
   }
 });
 
+// Helpers
 function errDetail(res, err) {
   console.log(err);
   return res.status(500).json({

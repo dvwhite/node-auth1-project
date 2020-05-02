@@ -7,7 +7,7 @@ const { findByUsername, insert } = require("./../users/user-model");
 router.post("/register", async (req, res) => {
   try {
     const user = req.body;
-    const hash = bcrypt.hashSync(req.body.password, process.env.HASHES);
+    const hash = bcrypt.hashSync(req.body.password, Number(process.env.HASHES));
     user.password = hash;
     const newUser = await insert(user);
     res.status(200).json({
@@ -26,11 +26,12 @@ router.post("/login", validateUsername, async (req, res) => {
     const user = await findByUsername(username);
     const authenticated = bcrypt.compareSync(password, user.password);
     if (authenticated) {
+      delete user.password; // This is no longer needed
       req.session.user = user;
       res.status(200).json({
         message: `Welcome, ${user.username}!`,
         validation: [],
-        data: {},
+        data: user,
       });
     } else {
       res.status(401).json({
