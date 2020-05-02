@@ -5,6 +5,7 @@ const { sanitizeUser } = require("../../utils/utils");
 
 module.exports = {
   find,
+  findById,
   findByUsername,
   insert
 };

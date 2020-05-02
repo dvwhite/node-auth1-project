@@ -7,6 +7,7 @@ const helmet = require("helmet");
 const session = require("express-session");
 const authRoute = require("./routes/auth/authRouter");
 const userRoute = require("./routes/users/users-router");
+const restricted = require("./routes/auth/restricted-middleware");
 
 // Session config object
 const sessionConfig = {
@@ -28,7 +29,7 @@ server.use(session(sessionConfig));
 
 // Routes
 server.use("/auth", authRoute);
-server.use("/api/users", userRoute);
+server.use("/api/users", restricted, userRoute);
 
 // Error middleware
 server.use((err, req, res, next) => {

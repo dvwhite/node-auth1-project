@@ -1,13 +1,11 @@
 const express = require("express");
 const router = express.Router();
 
-// Middleware imports
-const restricted = require("../auth/restricted-middleware");
+// Db helpers, utils
+const { find, findById } = require("./user-model");
+const { sanitizeUser } = require("../../utils/utils");
 
-// Db helpers
-const { find } = require("./user-model");
-
-router.get("/", restricted, async (req, res) => {
+router.get("/", async (req, res) => {
   try {
     const users = await find();
     res.status(200).json({
@@ -19,6 +17,45 @@ router.get("/", restricted, async (req, res) => {
     errDetail(res, err);
   }
 });
+
+router.get("/:id", validateUserId, async (req, res) => {
+  try {
+    const id = Number(req.params.id);
+    const user = await findById(id);
+    res.status(200).json({
+      message: "Success",
+      validation: [],
+      data: sanitizeUser(user)
+    })
+  } catch (err) {
+    errDetail(res, err);
+  }
+})
+
+// Middleware
+/**
+ * @function validateUserId: Validate the the id exists before submitting req
+ * @param {*} req: The request object sent to the API
+ * @param {*} res: The response object sent from the API
+ * @param {*} next: The express middleware function to move to the next middleware
+ * @returns: none
+ */
+async function validateUserId(req, res, next) {
+  try {
+    const id = Number(req.params.id);
+    const user = await findById(id);
+    if (!user) {
+      return res.status(404).json({
+        message: "Not Found",
+        validation: ["User id doesn't exist"],
+        data: {},
+      });
+    }
+    next();
+  } catch (err) {
+    errDetail(res, err);
+  }
+}
 
 // Helpers
 function errDetail(res, err) {

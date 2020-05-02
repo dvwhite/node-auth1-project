@@ -66,30 +66,6 @@ router.get("/logout", (req, res) => {
 });
 
 /**
- * @function validateUserId: Validate the the id exists before submitting req
- * @param {*} req: The request object sent to the API
- * @param {*} res: The response object sent from the API
- * @param {*} next: The express middleware function to move to the next middleware
- * @returns: none
- */
-async function validateUserId(req, res, next) {
-  try {
-    const id = Number(req.params.id);
-    const user = await findById(id);
-    if (!user) {
-      return res.status(404).json({
-        message: "Not Found",
-        validation: ["User id doesn't exist"],
-        data: {},
-      });
-    }
-    next();
-  } catch (err) {
-    errDetail(res, err);
-  }
-}
-
-/**
  * @function validateUsername: Validate the the id exists before submitting req
  * @param {*} req: The request object sent to the API
  * @param {*} res: The response object sent from the API
