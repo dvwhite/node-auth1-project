@@ -1,6 +1,4 @@
-module.export = (req, res, next) => {
-  const { username, password } = req.headers;
-
+module.exports = (req, res, next) => {
   if (req.session && req.session.user) {
     next();
   } else {

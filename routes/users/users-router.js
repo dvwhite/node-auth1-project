@@ -1,9 +1,13 @@
 const express = require("express");
 const router = express.Router();
 
+// Middleware imports
+const restricted = require("../auth/restricted-middleware");
+
+// Db helpers
 const { find } = require("./user-model");
 
-router.get("/users", async (req, res) => {
+router.get("/", restricted, async (req, res) => {
   try {
     const users = await find();
     res.status(200).json({
